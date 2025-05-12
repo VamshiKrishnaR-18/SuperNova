@@ -1,0 +1,27 @@
+{
+  "name": "scatch",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/VamshiKrishnaR-18/Scatch#readme",
+  "bugs": {
+    "url": "https://github.com/VamshiKrishnaR-18/Scatch/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VamshiKrishnaR-18/Scatch.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "config": "^3.3.12",
+    "debug": "^4.4.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongoose": "^8.14.2"
+  }
+}
