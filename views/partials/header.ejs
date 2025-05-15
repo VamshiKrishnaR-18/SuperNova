@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scatch</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="font-['Helvetica_Now_Display']">
+    <nav class="w-full fixed top-0 left-0 px-10 py-4 bg-rose-100 text-black shadow-md z-50 flex justify-between items-center">
+        <a href="/shop" class="text-2xl font-bold">Scatch</a>
+
+        <div class="flex items-center gap-6">
+            <a href="/cart" class="text-lg hover:text-gray-400">Cart</a>
+            <a href="/about" class="text-lg hover:text-gray-400">About</a>
+            <a href="/contact" class="text-lg hover:text-gray-400">Contact</a>
+            
+            <!-- My Account Dropdown -->
+            <% var loggedIn = typeof loggedIn !== "undefined" ? loggedIn: true %>
+
+            <% if(loggedIn){ %>
+                <div class="relative group">
+                <button class="flex items-center gap-2 text-lg hover:text-gray-400">
+                    My Account <i class="ri-arrow-down-s-line"></i>
+                </button>
+                <div class="absolute hidden group-hover:flex flex-col bg-gray-800 text-white rounded-md py-2 mt-2 shadow-lg min-w-[200px] right-0 z-50">
+                    <a href="/profile" class="px-4 py-2 hover:bg-gray-700">Profile</a>
+                    <a href="/orders" class="px-4 py-2 hover:bg-gray-700">Orders</a>
+                    <a href="/settings" class="px-4 py-2 hover:bg-gray-700">Settings</a>
+                    <a href="/logout" class="px-4 py-2 hover:bg-red-700 text-red-400">Logout</a>
+                </div>
+            </div>
+            <% } %>
+            
+            
+        </div>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<%- include('./partials/header') %>
+
+<!-- Flash Messages -->
+<% if (messages.error && messages.error.length > 0) { %>
+    <div id="flash-error" class="flash-message bg-red-500 text-white rounded-md px-5 py-3">
+        <% messages.error.forEach(function(msg){ %>
+            <span><%= msg %></span><br>
+        <% }) %>
+    </div>
+<% } %>
+
+<% if (messages.success && messages.success.length > 0) { %>
+    <div id="flash-success" class="flash-message bg-green-500 text-white rounded-md px-5 py-3">
+        <% messages.success.forEach(function(msg){ %>
+            <span><%= msg %></span><br>
+        <% }) %>
+    </div>
+<% } %>
+
+<!-- Main Container -->
+<div class="flex flex-col md:flex-row h-screen">
+    <!-- Registration Section -->
+    <div class="w-full md:w-1/2 flex items-center justify-center px-10 py-20">
+        <div class="w-full max-w-md">
+            <h3 class="text-4xl font-bold mb-5">Welcome to <span class="text-blue-400">Scatch</span></h3>
+            <h4 class="text-2xl mb-5">Create your account</h4>
+            <form autocomplete="off" action="/users/register" method="post">
+                <input type="text" name="fullname" placeholder="Full Name" class="input-field" required>
+                <input type="email" name="email" placeholder="Email" class="input-field" required>
+                <input type="password" name="password" placeholder="Password" class="input-field" required>
+                <button type="submit" class="btn-primary">Create My Account</button>
+            </form>
+        </div>
+    </div>
+    <div class="flex items-center justify-center text-2xl font-bold">
+        <h1>OR</h1>
+    </div>
+    <!-- Login Section -->
+    <div class="w-full md:w-1/2 flex items-center justify-center px-10 py-20 bg-gray-100">
+        
+        <div class="w-full max-w-md">
+        
+            <h4 class="text-2xl font-bold mb-5">Login to your account</h4>
+            <form autocomplete="off" action="/users/login" method="post">
+                <input type="email" name="email" placeholder="Email" class="input-field" required>
+                <input type="password" name="password" placeholder="Password" class="input-field" required>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Styles for Inputs and Buttons -->
+<style>
+
+    
+    .input-field {
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+    .btn-primary {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #3b82f6;
+        color: #fff;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #2563eb;
+    }
+    .flash-message {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+    .flash-message.fade-out {
+        opacity: 0;
+    }
+</style>
+
+<!-- Flash Message Auto-Fade Script -->
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const flashMessages = document.querySelectorAll(".flash-message");
+        flashMessages.forEach(message => {
+            setTimeout(() => {
+                message.classList.add("fade-out");
+                setTimeout(() => {
+                    message.remove();
+                }, 500);
+            }, 3000);
+        });
+    });
+</script>
+
+<%- include('./partials/footer') %>
