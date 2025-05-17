@@ -51,4 +51,32 @@ router.post("/create", upload.single("image"),async (req, res)=>{
 
 });
 
+router.post("/:productID/edit",upload.single("image"), async (req, res)=>{
+
+  try {
+    
+    const {image, name, price, discount, panelcolor, bgcolor, textcolor} = req.body;
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.productID,
+      {image, name, price, discount, panelcolor, bgcolor, textcolor},
+      {new: true, runValidators: true}
+    );
+
+    await product.save();
+
+    if(!product) return res.status(404).send('product not found!');
+
+    req.flash("success", "product details updated!");
+
+    res.redirect("/owners/adminDashboard");
+
+
+  } catch (error) {
+    console.error(error);
+  }
+
+
+})
+
 module.exports = router;

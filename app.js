@@ -4,7 +4,7 @@ const db = require('./config/mongoose-connection');
 require('dotenv').config();
 const expressSession = require("express-session");
 const flash = require("connect-flash");
-
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const isLoggedin = require('./middlewares/isLoggedin')
 
@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.set("view engine", 'ejs');
+app.use(express.static(path.join(__dirname, "public")));
 
 
 app.use(
@@ -36,7 +37,13 @@ app.use((req, res, next) => {
     next();
 });
 
-//app.use(isLoggedin);
+
+app.use((req, res, next) => {
+    res.locals.currentRoute = req.originalUrl;
+    next();
+});
+
+
 
 
 app.use('/', indexRouter);

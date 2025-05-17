@@ -1,65 +1,80 @@
 <%- include('./partials/header') %>
 
-<div class="w-full min-h-screen flex flex-col md:flex-row items-start p-5 md:p-10 gap-6 bg-gray-100 mt-10">
-    <% if (items && items.length > 0) { %>
-        <!-- Cart Items Section -->
-        <div class="w-full md:w-2/3 bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-wrap gap-6">
-            <% items.forEach(item => { %>
-                <div class="flex flex-col items-start bg-white rounded-2xl p-5 shadow-md w-full md:w-[48%] lg:w-[31%] transition-all duration-300 hover:shadow-xl border border-gray-200">
-                    <img src="data:<%= item.image.contentType %>;base64,<%= item.image.data.toString('base64') %>" alt="<%= item.name %>" class="w-full md:w-32 md:h-32 rounded-xl object-cover mb-4 shadow-sm" />
-                    <div class="flex-1 w-full">
-                        <h3 class="text-lg font-serif font-semibold text-gray-900 mb-2"><%= item.name %></h3>
-                        <p class="text-gray-600 text-sm mb-4"><%= item.description || 'No description available' %></p>
-                        <div class="flex items-center gap-2 mb-4">
-                            <button class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center hover:bg-gray-400 transition-all">-</button>
-                            <span class="px-4 py-2 bg-gray-100 rounded-md text-gray-700">1</span>
-                            <button class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center hover:bg-gray-400 transition-all">+</button>
-                        </div>
-                        <span class="text-xl font-bold text-gray-800">₹<%= item.price %></span>
-                    </div>
-                    <button class="text-red-500 hover:text-red-600 text-lg absolute bottom-5 right-5">✕</button>
-                </div>
-            <% }) %>
-            <div class="flex justify-start items-center w-full mt-5">
-                <a href="/shop" class="text-gray-500 hover:text-gray-800">← Back to shop</a>
-            </div>
-        </div>
-    <% } else { %>
-        <div class="w-full md:w-2/3 bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
-            <h2 class="text-2xl font-bold mb-4">Your cart is empty</h2>
-            <a href="/shop" class="text-gray-500 hover:text-gray-800">← Back to shop</a>
-        </div>
-    <% } %>
+<!-- Flash Messages -->
+<div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50">
+  <% if (messages.error && messages.error.length > 0) { %>
+  <div id="flash-error" class="bg-red-500 text-white rounded-md px-5 py-3 mb-4 shadow-lg">
+    <% messages.error.forEach(function(msg){ %>
+    <span><%= msg %></span><br />
+    <% }) %>
+  </div>
+  <% } %> <% if (messages.success && messages.success.length > 0) { %>
+  <div id="flash-success" class="bg-green-500 text-white rounded-md px-5 py-3 mb-4 shadow-lg text-center">
+    <% messages.success.forEach(function(msg){ %>
+    <span><%= msg %></span><br />
+    <% }) %>
+  </div>
+  <% } %>
+</div>
 
-    <!-- Sticky Summary Section -->
-    <div class="w-full md:w-1/3 bg-white rounded-xl shadow-lg p-6 md:p-8 sticky top-5 self-start border border-gray-200">
-        <h3 class="text-xl font-serif text-gray-900 mb-6">Summary</h3>
-        <div class="space-y-4">
-            <div class="flex justify-between">
-                <span class="text-gray-700">Items: <%= items.length %></span>
-                <span class="text-gray-900 font-semibold">€ 132.00</span>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="shipping" class="text-gray-700">Shipping</label>
-                <select id="shipping" class="px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                    <option>Standard-Delivery - €5.00</option>
-                </select>
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="code" class="text-gray-700">Give Code</label>
-                <div class="flex">
-                    <input id="code" type="text" placeholder="Enter your code" class="flex-1 px-4 py-2 rounded-l-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500" />
-                    <button class="px-4 py-2 bg-gray-900 text-white rounded-r-md hover:bg-gray-700 transition-all">→</button>
-                </div>
-            </div>
+<div class="w-full min-h-screen flex flex-col md:flex-row items-center p-5 md:p-10 gap-6 bg-gray-100 mt-10">
+  <% if (items && items.length > 0) { %>
+  <!-- Cart Items Section -->
+  <div class="w-full md:w-2/3 bg-white rounded-xl shadow-lg p-6 md:p-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% items.forEach(item => { %>
+    <div class="flex flex-col items-center bg-[<%= item.bgcolor %>] rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg border border-red-300 w-full md:max-w-[300px] lg:max-w-[300px]">
+      <img src="data:<%= item.image.contentType %>;base64,<%= item.image.data.toString('base64') %>" alt="<%= item.name %>" class="w-full h-[200px] rounded-xl mb-4" />
+      <div class="flex-1 w-full flex flex-col items-center">
+        <h3 class="text-lg font-serif font-semibold text-gray-900 mb-2 text-center w-full"><%= item.name %></h3>
+        <p class="text-gray-600 text-sm mb-4 text-center w-full"><%= item.description || 'No description available' %></p>
+        <div class="flex items-center gap-2 mb-4 justify-center w-full">
+          <a href="/cart/decrease/<%= item._id %>" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center hover:bg-gray-400 transition-all">-</a>
+          <a class="px-4 py-2 bg-gray-100 rounded-md text-gray-700"><%= item.quantity %></a>
+          <a href="/cart/increase/<%= item._id %>" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center hover:bg-gray-400 transition-all">+</a>
         </div>
-        <hr class="my-5" />
-        <div class="flex justify-between text-lg font-semibold text-gray-900">
-            <span>Total Price</span>
-            <span>€ 137.00</span>
-        </div>
-        <button class="w-full mt-5 py-3 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-700 transition-all">CHECKOUT</button>
+        <% var discount = item.price && item.discount ? +((item.discount / item.price) * 100).toFixed(2) : 0; %>
+        <% var discountedPrice = item.price - item.discount; %>
+        <div><span class="text-xl font-bold text-center w-full">₹<%= discountedPrice %></span></div>
+        <a href="/cart/remove/<%= item._id %>" class="text-red-500 hover:text-red-600 text-lg flex items-center justify-center w-full">remove</a>
+      </div>
     </div>
+    <% }) %>
+    <div class="flex justify-start items-center w-full mt-5">
+      <a href="/shop" class="text-gray-500 hover:text-gray-800">← Back to shop</a>
+    </div>
+  </div>
+
+  <!-- Dynamic Summary Section -->
+  <div class="w-full md:w-1/3 bg-white rounded-xl shadow-lg p-6 md:p-8 sticky top-5 self-start border border-gray-200">
+    <h3 class="text-xl font-serif text-gray-900 mb-6">Summary</h3>
+    <% var totalItems = 0, totalPrice = 0, totalDiscount = 0; %>
+    <% items.forEach(item => { %>
+    <% totalItems += item.quantity; %>
+    <% totalPrice += item.price * item.quantity; %>
+    <% totalDiscount += item.discount * item.quantity; %>
+    <% }); %>
+    <div class="space-y-4">
+      <div class="flex justify-between">
+        <span class="text-gray-700">Total items:</span>
+        <span class="text-gray-900 font-semibold"><%= totalItems %></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-700">Total Savings:</span>
+        <span class="text-gray-900 font-semibold">₹<%= totalDiscount %></span>
+      </div>
+      <div class="flex justify-between text-lg font-semibold text-gray-900">
+        <span>Total Price:</span>
+        <span>₹<%= totalPrice - totalDiscount %></span>
+      </div>
+    </div>
+    <button class="w-full mt-5 py-3 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-700 transition-all">CHECKOUT</button>
+  </div>
+  <% } else { %>
+  <div class="w-full md:w-2/3 bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
+    <h2 class="text-2xl font-bold mb-4">Your cart is empty</h2>
+    <a href="/shop" class="text-gray-500 hover:text-gray-800">← Back to shop</a>
+  </div>
+  <% } %>
 </div>
 
 <%- include('./partials/footer') %>

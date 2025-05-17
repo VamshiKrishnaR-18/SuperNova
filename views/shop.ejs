@@ -2,76 +2,108 @@
 
 <!-- Flash Messages -->
 <div class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50">
-    <% if (messages.error && messages.error.length > 0) { %>
-        <div id="flash-error" class="bg-red-500 text-white rounded-md px-5 py-3 mb-4 shadow-lg">
-            <% messages.error.forEach(function(msg){ %>
-                <span><%= msg %></span><br />
-            <% }) %>
-        </div>
-    <% } %>
-
-    <% if (messages.success && messages.success.length > 0) { %>
-        <div id="flash-success" class="bg-green-500 text-white rounded-md px-5 py-3 mb-4 shadow-lg text-center">
-            <% messages.success.forEach(function(msg){ %>
-                <span><%= msg %></span><br />
-            <% }) %>
-        </div>
-    <% } %>
+  <% if (messages.error && messages.error.length > 0) { %>
+  <div
+    id="flash-error"
+    class="bg-red-500 text-white rounded-md px-5 py-3 mb-4 shadow-lg"
+  >
+    <% messages.error.forEach(function(msg){ %>
+    <span><%= msg %></span><br />
+    <% }) %>
+  </div>
+  <% } %> <% if (messages.success && messages.success.length > 0) { %>
+  <div
+    id="flash-success"
+    class="bg-green-500 text-white rounded-md px-5 py-3 mb-4 shadow-lg text-center"
+  >
+    <% messages.success.forEach(function(msg){ %>
+    <span><%= msg %></span><br />
+    <% }) %>
+  </div>
+  <% } %>
 </div>
 
-<div class="container mx-auto flex gap-8 px-10 py-20">
-    <!-- Sidebar (Sticky) -->
-    <aside class="w-1/4 sticky top-20 h-[80vh] overflow-y-auto bg-white shadow-md rounded-lg p-6">
-        <h3 class="text-lg font-semibold mb-4">Sort by</h3>
-        <form action="/shop">
-            <select class="border px-2 py-1 w-full rounded-md mb-6">
-                <option value="popular">Popular</option>
-                <option value="newest">Newest</option>
-            </select>
+<div class="container mx-auto flex gap-8 px-10 py-20 mt-10">
+  <!-- Sidebar (Sticky) -->
+  <aside
+    class="w-[200px] sticky top-20 h-[70vh] overflow-y-auto bg-white shadow-md rounded-lg p-6"
+  >
+    <h3 class="text-lg font-semibold mb-4">Sort by</h3>
+    <form action="/shop">
+      <select class="border px-2 py-1 w-full rounded-md mb-6">
+        <option value="popular">Popular</option>
+        <option value="newest">Newest</option>
+      </select>
 
-        <h3 class="text-lg font-semibold mb-4">Categories</h3>
-        <a class="block mb-2 hover:text-blue-500" href="#">New Collection</a>
-        <a class="block mb-2 hover:text-blue-500" href="#">All Products</a>
-        <a class="block mb-2 hover:text-blue-500" href="#">Discounted Products</a>
+      <h3 class="text-lg font-semibold mb-4">Categories</h3>
+      <a class="block mb-2 hover:text-blue-500" href="#">New Collection</a>
+      <a class="block mb-2 hover:text-blue-500" href="#">All Products</a>
+      <a class="block mb-2 hover:text-blue-500" href="#">Discounted Products</a>
 
-        <h3 class="text-lg font-semibold mb-4 mt-8">Filter by</h3>
-        <a class="block mb-2 hover:text-blue-500" href="#">Availability</a>
-        <a class="block mb-2 hover:text-blue-500" href="#">Discount</a>
-        </form>
-        
-    </aside>
+      <h3 class="text-lg font-semibold mb-4 mt-8">Filter by</h3>
+      <a class="block mb-2 hover:text-blue-500" href="#">Availability</a>
+      <a class="block mb-2 hover:text-blue-500" href="#">Discount</a>
+    </form>
+  </aside>
 
-    
+  <!-- Product Grid -->
+  <main
+    class="w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 ml-10"
+  >
+    <% products.forEach(function(product){ %>
+    <div
+      class="flex flex-col bg-white rounded-md shadow-lg overflow-hidden mb-8 h-[300px]"
+    >
+      <div
+        class="h-60 flex items-center justify-center bg-[<%= product.bgcolor %>]"
+      >
+        <img
+          class="h-48"
+          src="data:<%= product.image.contentType %>;base64,<%= product.image.data.toString('base64') %>"
+          alt="<%= product.name %>"
+        />
+      </div>
+      <div
+        class="p-4 flex justify-between items-center bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]"
+      >
+        <div>
+          <h3 class="font-semibold"><%= product.name %></h3>
+          <% var discount = product.price ? +((product.discount / product.price)
+          * 100).toFixed(2) : 0; %> <% var discountedPrice = product.price -
+          discount %>
 
-    <!-- Product Grid -->
-    <main class="w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <% products.forEach(function(product){ %>
-            <div class="flex flex-col bg-white rounded-md shadow-lg overflow-hidden mb-8 h-[280px]">
-                <div class="h-60 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                    <img class="h-48" src="data:<%= product.image.contentType %>;base64,<%= product.image.data.toString('base64') %>" alt="<%= product.name %>">
-                </div>
-                <div class="p-4 flex justify-between items-center bg-[<%= product.panelcolor %>] text-[<%= product.textcolor %>]">
-                    <div>
-                        <h3 class="font-semibold"><%= product.name %></h3>
-                        <h4 class="text-sm">₹ <%= product.price %></h4>
-                    </div>
-                    <a href="/addToCart/<%=product._id%>" class="w-8 h-8 flex items-center justify-center rounded-full bg-white text-gray-700 shadow hover:bg-gray-200">
-                        <i class="ri-add-line"></i>
-                    </a>
-                </div>
-            </div>
-        <% }) %>
-    </main>
+          
+          <div class="flex flex-row gap-3">
+            <h4 class="text-sm text-red-500 flex items-center justify-center">
+            -<%= discount%>% 
+            </h4>
+            <h4 class="text-lg font-semibold">₹<%= discountedPrice %></h4>
+
+          </div>
+
+          <h4 class="text-xs">M.R.P: ₹ <%= product.price %></h4>
+          <!-- <h4 class="text-sm text-white"></h4> -->
+        </div>
+        <a
+          href="/addToCart/<%=product._id%>"
+          class="w-8 h-8 flex items-center justify-center rounded-full bg-white text-gray-700 shadow hover:bg-gray-200"
+        >
+          <i class="ri-add-line"></i>
+        </a>
+      </div>
+    </div>
+    <% }) %>
+  </main>
 </div>
 
 <%- include('./partials/footer') %>
 
 <script>
-    // Auto-hide flash messages
-    setTimeout(() => {
-        const successMsg = document.getElementById("flash-success");
-        const errorMsg = document.getElementById("flash-error");
-        if (successMsg) successMsg.style.display = "none";
-        if (errorMsg) errorMsg.style.display = "none";
-    }, 4000);
+  // Auto-hide flash messages
+  setTimeout(() => {
+    const successMsg = document.getElementById("flash-success");
+    const errorMsg = document.getElementById("flash-error");
+    if (successMsg) successMsg.style.display = "none";
+    if (errorMsg) errorMsg.style.display = "none";
+  }, 4000);
 </script>

@@ -1,24 +1,22 @@
 const mongoose = require("mongoose");
 
-
 const ownerSchema = mongoose.Schema({
-
-    fullname:{
+    fullname: {
         type: String,
         minLength: 3,
         trim: true,
     },
-
     email: String,
     password: String,
     products: {
         type: Array,
-        default:[],
+        default: [],
     },
-
-    picture: String,
-    gstin:String,
-
+    picture: {
+        type: String,
+        default: "/images/default-avatar.png",  // Set default image path
+    },
+    gstin: String,
 });
 
-module.exports = mongoose.model('owner', ownerSchema);
+module.exports = mongoose.model("Owner", ownerSchema);

@@ -57,7 +57,7 @@ module.exports.loginUser = async (req, res) => {
     if (result) {
       let token = generateToken(User);
       res.cookie("token", token);
-      req.flash("success", "your are looged in."), res.redirect("/shop");
+      req.flash("success", "your are logged in."), res.redirect("/shop");
     } else {
       req.flash("error", "wrong password!"), res.redirect("/");
     }
