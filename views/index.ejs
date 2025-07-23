@@ -19,8 +19,8 @@
       rel="stylesheet"
     />
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
     <!-- Flash Messages -->
@@ -44,21 +44,7 @@
     </div>
     <% } %>
 
-   <% if (messages.error && messages.error.length > 0) { %>
-    <div id="flash-error" class="flash-message bg-red-500 text-white rounded-md px-5 py-3">
-        <% messages.error.forEach(function(msg){ %>
-            <span><%= msg %></span><br>
-        <% }) %>
-    </div>
-<% } %>
 
-<% if (messages.success && messages.success.length > 0) { %>
-    <div id="flash-success" class="flash-message bg-green-500 text-white rounded-md px-5 py-3">
-        <% messages.success.forEach(function(msg){ %>
-            <span><%= msg %></span><br>
-        <% }) %>
-    </div>
-<% } %>
 
 <!-- Main Container -->
 <div class="flex flex-col md:flex-row min-h-screen">
@@ -142,50 +128,7 @@
 </footer>
 
 
-<!-- Styles for Inputs and Buttons -->
-<style>
-  .input-field {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    transition: border-color 0.3s ease;
-  }
-  .input-field:focus {
-    border-color: #2563eb;
-    outline: none;
-  }
-  .btn-primary {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #3b82f6;
-    color: #fff;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  .btn-primary:hover {
-    background-color: #2563eb;
-  }
-  .flash-message {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
-  }
-  .flash-message.fade-out {
-    opacity: 0;
-  }
-  .supernova {
-    font-family: "Condiment", cursive;
-  }
-</style>
+
 
 <!-- Flash Message Auto-Fade Script -->
 <script>
