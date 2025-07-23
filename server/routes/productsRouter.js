@@ -17,7 +17,7 @@ router.post("/create", upload.single("image"),async (req, res)=>{
 
         if(!name || !price || !req.file){
             req.flash("error", "product name, price and image are required!");
-            res.redirect("/owners/admin");
+            res.redirect("/owners/createproducts");
         }
 
 
@@ -37,7 +37,7 @@ router.post("/create", upload.single("image"),async (req, res)=>{
         await product.save();
 
         req.flash("success", "product created successfully!");
-        res.redirect("/owners/admin")
+        res.redirect("/owners/createproducts")
 
 
     }catch (err){

@@ -42,9 +42,18 @@ if (process.env.NODE_ENV === "development") {
 
 router.get("/adminDashboard", async (req, res) => {
   try {
-    const owner = await ownerModel.findOne({});
+    let owner = await ownerModel.findOne({});
     const products = await Product.find({});
-    
+
+    // If no owner exists, create a default one or provide default values
+    if (!owner) {
+      owner = {
+        fullname: "Admin",
+        email: "admin@supernova.com",
+        picture: null
+      };
+    }
+
     // Ensure each product has a formatted createdAt date
     const formattedProducts = products.map((product) => ({
       ...product.toObject(),
@@ -53,7 +62,7 @@ router.get("/adminDashboard", async (req, res) => {
 
     console.log(owner)
 
-    res.render("adminDashboard", { products: formattedProducts ,owner});
+    res.render("adminDashboard", { products: formattedProducts, owner});
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

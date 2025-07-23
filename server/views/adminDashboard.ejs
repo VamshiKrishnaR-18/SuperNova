@@ -7,12 +7,12 @@
     <!-- Admin Profile Section -->
     <div class="text-center mb-6">
       <img
-        src="<%= owner.picture || '/images/default-avatar.png' %>"
+        src="<%= (owner && owner.picture) ? owner.picture : '/images/default-avatar.png' %>"
         alt="Admin Avatar"
         class="w-24 h-24 rounded-full mx-auto shadow-lg"
       />
-      <h2 class="text-xl font-semibold mt-4"><%= owner.fullname %></h2>
-      <p class="text-sm text-gray-500"><%= owner.email %></p>
+      <h2 class="text-xl font-semibold mt-4"><%= (owner && owner.fullname) ? owner.fullname : 'Admin' %></h2>
+      <p class="text-sm text-gray-500"><%= (owner && owner.email) ? owner.email : 'admin@supernova.com' %></p>
       <a href="/logout" class="text-red-500 mt-4 block hover:text-red-600">Logout</a>
     </div>
 
