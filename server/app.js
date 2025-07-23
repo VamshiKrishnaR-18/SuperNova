@@ -1,12 +1,11 @@
 const express = require('express');
 const app = express();
-const db = require('./config/mongoose-connection');
+require('./config/mongoose-connection');
 require('dotenv').config();
 const expressSession = require("express-session");
-const flash = require("connect-flash");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const isLoggedin = require('./middlewares/isLoggedin')
+const cors = require("cors");
 
 
 const indexRouter = require("./routes/index")
@@ -15,10 +14,18 @@ const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
 
 
+// CORS configuration
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://localhost:5177', 'http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie']
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.set("view engine", 'ejs');
 app.use(express.static(path.join(__dirname, "public")));
 
 
@@ -30,14 +37,9 @@ app.use(
     })
 );
 
-app.use(flash());
-
-app.use((req, res, next) => {
-    res.locals.messages = req.flash();
-    next();
-});
 
 
+// API middleware for JSON responses
 app.use((req, res, next) => {
     res.locals.currentRoute = req.originalUrl;
     next();

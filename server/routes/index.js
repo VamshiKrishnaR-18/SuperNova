@@ -11,14 +11,43 @@ const {updateCartItemQuantity} = require('../utils/updateCart');
 const isLoggedin = require("../middlewares/isLoggedin");
 
 router.get("/", (req, res) => {
-  const error = req.query.error || "";
-  res.render("index", { error, loggedIn: false });
+  res.json({
+    success: true,
+    message: "SuperNova API is running",
+    endpoints: {
+      auth: "/users/register, /users/login, /users/logout",
+      shop: "/shop",
+      cart: "/cart",
+      profile: "/profile",
+      about: "/about"
+    }
+  });
 });
 
 router.get("/shop", isLoggedin, async (req, res) => {
-  const products = await Product.find({});
+  try {
+    const products = await Product.find({});
 
-  res.render("shop", { products });
+    // Convert image buffer to base64 for JSON response
+    const productsWithImages = products.map(product => ({
+      ...product.toObject(),
+      image: {
+        data: product.image.data.toString('base64'),
+        contentType: product.image.contentType
+      }
+    }));
+
+    res.json({
+      success: true,
+      products: productsWithImages
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching products"
+    });
+  }
 });
 
 router.get("/cart", isLoggedin, async (req, res) => {
@@ -31,40 +60,73 @@ router.get("/cart", isLoggedin, async (req, res) => {
 
         const items = user?.cart.map(item => ({
             ...item.product.toObject(),
-            quantity: item.quantity || 1
+            quantity: item.quantity || 1,
+            image: {
+                data: item.product.image.data.toString('base64'),
+                contentType: item.product.image.contentType
+            }
         })) || [];
 
-        
-
-        res.render("cart", { items });
+        res.json({
+            success: true,
+            items: items
+        });
     } catch (err) {
         console.error("Error loading cart:", err);
-        res.render("cart", { items: [] });
+        res.status(500).json({
+            success: false,
+            message: "Error loading cart",
+            items: []
+        });
     }
 });
 
 router.get("/profile", isLoggedin, async (req, res)=>{
+    try {
+        let user = await userModel.findOne({email: req.user.email}).select('-password');
 
-    let user = await userModel.findOne({email: req.user.email});
-    console.log(user);
-
-    res.render('userProfile', {user});
+        res.json({
+            success: true,
+            user: user
+        });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching user profile"
+        });
+    }
 })
 
-router.get("/about",async(req,res)=>{
+router.get("/about", async (req, res) => {
+    try {
+        let owner = await ownerModel.findOne({});
 
-    let owner = await ownerModel.findOne({})
-    res.render('about', {owner});
+        res.json({
+            success: true,
+            owner: owner || {
+                fullname: "SuperNova Team",
+                email: "info@supernova.com",
+                picture: "/images/default-avatar.png"
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching about info:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching about information"
+        });
+    }
 })
 
-router.get("/addToCart/:productId", isLoggedin, async (req, res) => {
+router.post("/addToCart/:productId", isLoggedin, async (req, res) => {
     try {
         const user = await userModel.findOne({ email: req.user.email });
         const productId = req.params.productId;
 
         // Check if the product already exists in the cart
-        const existingItem = user.cart.find(item => item.toString() === productId);
-        
+        const existingItem = user.cart.find(item => item.product.toString() === productId);
+
         if (existingItem) {
             // Increase the quantity if the product is already in the cart
             existingItem.quantity++;
@@ -74,27 +136,34 @@ router.get("/addToCart/:productId", isLoggedin, async (req, res) => {
         }
 
         await user.save();
-        req.flash("success", "Item added to cart!");
-        res.redirect("/shop");
+        res.json({
+            success: true,
+            message: "Item added to cart!"
+        });
     } catch (error) {
         console.error("Error adding to cart:", error);
-        req.flash("error", "Unable to add item to cart.");
-        res.redirect("/shop");
+        res.status(500).json({
+            success: false,
+            message: "Unable to add item to cart."
+        });
     }
 });
 
 
 
 // Increase quantity
-router.get("/cart/increase/:item_id", isLoggedin, (req, res) => updateCartItemQuantity(req, res, "increase"));
+router.post("/cart/increase/:item_id", isLoggedin, (req, res) => updateCartItemQuantity(req, res, "increase"));
 
 // Decrease quantity
-router.get("/cart/decrease/:item_id", isLoggedin, (req, res) => updateCartItemQuantity(req, res, "decrease"));
+router.post("/cart/decrease/:item_id", isLoggedin, (req, res) => updateCartItemQuantity(req, res, "decrease"));
 
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   res.cookie("token", "");
-  res.redirect("/");
+  res.json({
+    success: true,
+    message: "Logged out successfully"
+  });
 });
 
 module.exports = router;

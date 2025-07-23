@@ -16,8 +16,10 @@ router.post("/create", upload.single("image"),async (req, res)=>{
         let{ name, price, discount, bgcolor, panelcolor, textcolor} = req.body;
 
         if(!name || !price || !req.file){
-            req.flash("error", "product name, price and image are required!");
-            res.redirect("/owners/createproducts");
+            return res.status(400).json({
+                success: false,
+                message: "Product name, price and image are required!"
+            });
         }
 
 
@@ -36,15 +38,23 @@ router.post("/create", upload.single("image"),async (req, res)=>{
 
         await product.save();
 
-        req.flash("success", "product created successfully!");
-        res.redirect("/owners/createproducts")
-
+        res.status(201).json({
+            success: true,
+            message: "Product created successfully!",
+            product: {
+                id: product._id,
+                name: product.name,
+                price: product.price,
+                discount: product.discount
+            }
+        });
 
     }catch (err){
-
         console.error(err);
-        res.status(500).send("server error");
-
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
     }
     
 
@@ -65,15 +75,23 @@ router.post("/:productID/edit",upload.single("image"), async (req, res)=>{
 
     await product.save();
 
-    if(!product) return res.status(404).send('product not found!');
+    if(!product) return res.status(404).json({
+        success: false,
+        message: 'Product not found!'
+    });
 
-    req.flash("success", "product details updated!");
-
-    res.redirect("/owners/adminDashboard");
-
+    res.json({
+        success: true,
+        message: "Product details updated!",
+        product: product
+    });
 
   } catch (error) {
     console.error(error);
+    res.status(500).json({
+        success: false,
+        message: "Server error"
+    });
   }
 
 

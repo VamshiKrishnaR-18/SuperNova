@@ -62,15 +62,25 @@ router.get("/adminDashboard", async (req, res) => {
 
     console.log(owner)
 
-    res.render("adminDashboard", { products: formattedProducts, owner});
+    res.json({
+      success: true,
+      products: formattedProducts,
+      owner: owner
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
   }
 });
 
 router.get("/createproducts", async (req, res) => {
-  res.render("createproducts");
+  res.json({
+    success: true,
+    message: "Create products endpoint"
+  });
 });
 
 router.post("/deleteProducts", async (req, res) => {
@@ -78,34 +88,39 @@ router.post("/deleteProducts", async (req, res) => {
     const { ids } = req.body;
     await Product.deleteMany({ _id: { $in: ids } });
 
-    res.redirect("/owners/adminDashboard");
+    res.json({
+      success: true,
+      message: "Products deleted successfully"
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error deleting products");
+    res.status(500).json({
+      success: false,
+      message: "Error deleting products"
+    });
   }
 });
-module.exports = router;
-
 
 router.get("/editItem/:productID/edit", async (req, res)=>{
-
   try{
     let product = await Product.findById(req.params.productID)
 
-    if(!product) return res.status(404).send('product not found');
+    if(!product) return res.status(404).json({
+      success: false,
+      message: 'Product not found'
+    });
 
-    res.render("editProduct", {product});
+    res.json({
+      success: true,
+      product: product
+    });
   }catch(err){
-
-    console.error('err');
-    res.status(500).send('Server error');
-
-
+    console.error('Error fetching product:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
-
- 
-})
-
-
+});
 
 module.exports = router;

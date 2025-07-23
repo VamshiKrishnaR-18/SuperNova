@@ -1,3 +1,64 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Condiment&display=swap');
+
+/* Custom styles */
+.input-field {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.btn-primary {
+  color: #fff;
+  cursor: pointer;
+  background-color: #3b82f6;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 700;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-primary:disabled:hover {
+  background-color: #9ca3af;
+}
+
+.flash-message {
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.flash-message.fade-out {
+  opacity: 0;
+}
+
+.supernova {
+  font-family: 'Condiment', cursive;
+}
